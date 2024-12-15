@@ -535,6 +535,7 @@ _import_structure = {
     "models.levit": ["LevitConfig"],
     "models.lilt": ["LiltConfig"],
     "models.llama": ["LlamaConfig"],
+    "models.llamaV": ["LlamaConfig"],
     "models.llava": [
         "LlavaConfig",
         "LlavaProcessor",
@@ -1098,6 +1099,7 @@ else:
     _import_structure["models.layoutxlm"].append("LayoutXLMTokenizerFast")
     _import_structure["models.led"].append("LEDTokenizerFast")
     _import_structure["models.llama"].append("LlamaTokenizerFast")
+    _import_structure["models.llamaV"].append("LlamaTokenizerFast")
     _import_structure["models.longformer"].append("LongformerTokenizerFast")
     _import_structure["models.lxmert"].append("LxmertTokenizerFast")
     _import_structure["models.markuplm"].append("MarkupLMTokenizerFast")
@@ -2619,6 +2621,16 @@ else:
             "LlamaForTokenClassification",
             "LlamaModel",
             "LlamaPreTrainedModel",
+        ]
+    )
+    _import_structure["models.llamaV"].extend(
+        [
+            "LlamaVForCausalLM",
+            # "LlamaForQuestionAnswering",
+            # "LlamaForSequenceClassification",
+            # "LlamaForTokenClassification",
+            "LlamaVModel",
+            "LlamaVPreTrainedModel",
         ]
     )
     _import_structure["models.llava"].extend(
@@ -5461,6 +5473,7 @@ if TYPE_CHECKING:
     from .models.levit import LevitConfig
     from .models.lilt import LiltConfig
     from .models.llama import LlamaConfig
+    from .models.llamaV import LlamaConfig
     from .models.llava import (
         LlavaConfig,
         LlavaProcessor,
@@ -6006,6 +6019,7 @@ if TYPE_CHECKING:
         from .models.gpt_sw3 import GPTSw3Tokenizer
         from .models.layoutxlm import LayoutXLMTokenizer
         from .models.llama import LlamaTokenizer
+        from .models.llamaV import LlamaTokenizer
         from .models.m2m_100 import M2M100Tokenizer
         from .models.marian import MarianTokenizer
         from .models.mbart import MBartTokenizer
@@ -6073,6 +6087,7 @@ if TYPE_CHECKING:
         from .models.layoutxlm import LayoutXLMTokenizerFast
         from .models.led import LEDTokenizerFast
         from .models.llama import LlamaTokenizerFast
+        from .models.llamaV import LlamaTokenizerFast
         from .models.longformer import LongformerTokenizerFast
         from .models.lxmert import LxmertTokenizerFast
         from .models.markuplm import MarkupLMTokenizerFast
@@ -7350,6 +7365,11 @@ if TYPE_CHECKING:
             LlamaForTokenClassification,
             LlamaModel,
             LlamaPreTrainedModel,
+        )
+        from .models.llamaV import (
+            LlamaVForCausalLM,
+            LlamaVModel,
+            LlamaVPreTrainedModel
         )
         from .models.llava import (
             LlavaForConditionalGeneration,

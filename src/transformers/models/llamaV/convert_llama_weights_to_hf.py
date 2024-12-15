@@ -22,7 +22,7 @@ from typing import List
 import torch
 from tokenizers import AddedToken, processors
 
-from transformers import GenerationConfig, LlamaConfig, LlamaForCausalLM, LlamaTokenizer, PreTrainedTokenizerFast
+from transformers import GenerationConfig, LlamaConfig, LlamaForCausalLM, LlamaTokenizer, PreTrainedTokenizerFast, LlamaVForCausalLM
 from transformers.convert_slow_tokenizer import TikTokenConverter
 
 
@@ -249,6 +249,7 @@ def write_model(
             # Not sharded
             # (The sharded implementation would also work, but this is simpler.)
             loaded = torch.load(os.path.join(input_base_path, "consolidated.00.pth"), map_location="cpu")
+            # print(loaded.keys())
         else:
             # Sharded
             checkpoint_list = sorted([file for file in os.listdir(input_base_path) if file.endswith(".pth")])
@@ -373,6 +374,7 @@ def write_model(
         for k, v in state_dict.items():
             index_dict["weight_map"][k] = filename
             param_count += v.numel()
+        print(state_dict.keys())
         torch.save(state_dict, os.path.join(tmp_model_path, filename))
 
         # Write configs
@@ -436,7 +438,7 @@ def write_model(
         gc.collect()
 
         print("Loading the checkpoint in a Llama model.")
-        model = LlamaForCausalLM.from_pretrained(tmp_model_path, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True)
+        model = LlamaVForCausalLM.from_pretrained(tmp_model_path, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True)
 
         # Avoid saving this as part of the config.
         del model.config._name_or_path
@@ -513,7 +515,6 @@ def write_tokenizer(
     print("Converting the tokenizer.")
     tokenizer_class = LlamaTokenizer if LlamaTokenizerFast is None else LlamaTokenizerFast
     if is_llama_3(llama_version):
-        print(special_tokens)
         tokenizer = Llama3Converter(
             input_tokenizer_path,
             special_tokens,
